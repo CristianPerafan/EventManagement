@@ -8,7 +8,10 @@ const routes = (app: Express) =>{
     app.put('/users/:id', userController.updateById);  
     app.delete('/users/:id', userController.delete);  
     app.post('/login', userController.login);
-    app.post('/event/create',auth, eventController.create);
+    app.post('/event/create',auth, eventController.createEvent);
+    app.put('/event/update/:id', auth, eventController.updateEvent);
+    app.delete('/event/delete/:id', auth, eventController.deleteEvent);
+    
 };
 
 export default routes;
