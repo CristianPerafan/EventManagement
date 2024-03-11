@@ -3,11 +3,13 @@ import Event, { EventDocument, EventInput } from '../models/event.models';
 import { UserDocument, UserInput } from '../models/user.models';
 import userService from '../services/user.service';
 import eventService from '../services/event.service';
+import userController from './user.controller';
+import { title } from 'process';
 
 class EventController {
     public async createEvent(req: Request, res: Response) {
         try {
-            const eventData = req.body;
+            const eventData : EventInput = req.body;
             const userId = req.body.loggedUser.user_id;
             const user = await userService.findById(userId);
 
@@ -16,13 +18,20 @@ class EventController {
             }
 
             // Verificar que el usuario tenga permiso para crear eventos
-            if (user.role !== 'organizer' && user.role !== 'attendant') {
-                return res.status(403).json({ message: 'Unauthorized: Only organizers or attendants can create events' });
+            if (user.role !== 'organizer') {
+                return res.status(403).json({ message: 'Unauthorized: Only organizers can create events' });
             }
-
+            const createdEvent : EventDocument|null = await eventService.findEventByTitle(eventData.title);
+            if (createdEvent!=null){
+                return res.status(400).json(createdEvent);
+            }
+            eventData.organizer= userId;
             // Crear el evento
             const event: EventDocument = await eventService.createEvent(eventData);
+            user.events.push(event);
+            userService.updateById(user.id,user)
             return res.status(200).json(event);
+                   
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -74,32 +83,38 @@ class EventController {
     }
 
 
-    public async updateEvent(req: Request, res: Response): Promise<void> {
+    public async updateEvent(req: Request, res: Response) {
         try {
-            const eventId = req.params.id;
+            const eventId = req.params.event_id;
             const eventData = req.body;
 
             const userId = req.body.loggedUser.user_id;
 
             const user: UserDocument | null = await userService.findById(userId);
             if (!user || user.role !== 'organizer') {
-                res.status(403).json({ message: 'You are not authorized to edit this event' });
-                return;
+                return res.status(403).json({ message: 'You are not authorized to edit this event' });
+                
             }
 
             // Verificar si el evento existe y si el usuario es el organizador
-            const event: EventDocument | null = await Event.findOne({ _id: eventId, organizer: userId });
+            const event: EventDocument | null = await eventService.getEventById(eventId);
             if (!event) {
-                res.status(404).json({ message: 'Event not found or you are not authorized to edit this event' });
+                res.status(404).json(event);
                 return;
             }
-
-            const updatedEvent = await Event.findByIdAndUpdate(eventId, eventData, { new: true });
-            res.status(200).json(updatedEvent);
+            const updatedEvent = await eventService.updateEvent(eventId,eventData as EventInput)
+            var updatedEvents = await user.events.filter(e=>e.title !== event.title);
+            if(updatedEvent!= null){
+                user.events=updatedEvents;
+                user.events.push(updatedEvent);
+                userService.updateById(user.id,user)
+                res.status(200).json(updatedEvent);
+            }
         } catch (error) {
             res.status(500).json(error);
         }
     }
+
 
     public async deleteEvent(req: Request, res: Response): Promise<void> {
         try {

@@ -3,6 +3,15 @@ import User, { UserDocument } from '../models/user.models';
 
 class EventService {
 
+    public async findEventByTitle(title: any): Promise<EventDocument | null> {
+        try {
+            const event = await Event.findOne({title});
+            return event;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     public async getEventById(eventId: string): Promise<EventDocument | null> {
         try {
             const event = await Event.findById(eventId);
@@ -29,19 +38,12 @@ class EventService {
         }
     }
 
-    public async updateEvent(userId: string, eventId: string, eventData: EventInput): Promise<EventDocument | null> {
-        try {
-            const event = await Event.findById(eventId);
-            if (!event) {
-                return null;
-            }
-
-            // Verificar si el usuario tiene permiso para editar el evento
-            // Aquí puedes implementar lógica específica según tus requisitos de autorización
-
-            const updatedEvent = await Event.findByIdAndUpdate(eventId, eventData, { new: true });
+    public async updateEvent(eventId: string, eventData: EventInput): Promise<EventDocument | null> {
+        try{
+            const event = await Event.updateOne({_id: eventId}, eventData);
+            const updatedEvent = await Event.findOne({_id: eventId});
             return updatedEvent;
-        } catch (error) {
+        }catch (error){
             throw error;
         }
     }
