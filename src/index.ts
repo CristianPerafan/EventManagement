@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import routes from './routes/index'
 import { db } from './config/db';
+import e from "express";
 const app = express();
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -28,3 +29,6 @@ db.then(()=>{
         console.log(`Server is running on port: ${port}`)
     })
 }).catch((err)=> console.error(err));
+
+
+export default app;
