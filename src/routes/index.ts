@@ -10,6 +10,9 @@ const routes = (app: Express) =>{
     app.get('/users/:email/events', auth,userController.getEventsByUser);
     app.post('/login', userController.login);
     app.post('/event/create',auth, eventController.createEvent);
+    app.get('/events/filter/date', eventController.getEventsByDate);
+    app.get('/events/filter/location', eventController.getEventsByLocation);
+    app.get('/events/filter/type', eventController.getEventsByType);
     app.put('/event/update/:event_id', auth, eventController.updateEvent);
     app.delete('/event/delete/:id', auth, eventController.deleteEvent);
     app.post('/event/:event_id/subscribe',auth, eventController.subscribe);

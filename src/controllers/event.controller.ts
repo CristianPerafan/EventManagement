@@ -144,14 +144,25 @@ class EventController {
 
     public async getAttendees(req: Request, res: Response): Promise<void> {
         try{
+
+            
             const eventId = req.params.event_id;
 
-            const event : EventDocument | null = await eventService.getEventById(eventId);
 
-            if (!event) {
-                res.status(404).json({ message: 'Event not found' });
+            const userId = req.body.loggedUser.user_id;
+
+            const user: UserDocument | null = await userService.findById(userId);
+            if (!user || user.role !== 'organizer') {
+                res.status(403).json({ message: 'You are not authorized to delete this event' });
                 return;
             }
+
+            const event: EventDocument | null = await Event.findOne({ _id: eventId, organizer: userId });
+            if (!event) {
+                res.status(404).json({ message: 'Event not found or you are not authorized to delete this event' });
+                return;
+            }
+
 
             const attendees = await eventService.getAttendees(eventId);
 
