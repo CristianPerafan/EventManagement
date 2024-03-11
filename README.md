@@ -2,7 +2,7 @@
 
 - Juan David Bahamón
 - Cristian Perafan
-- Juan Camilo Medina
+- Juan Sebastian Medina
 
 ## Descripción
 
