@@ -1,6 +1,16 @@
 import Event, { EventInput, EventDocument } from '../models/event.models';
+import User, { UserDocument } from '../models/user.models';
 
 class EventService {
+
+    public async getEventById(eventId: string): Promise<EventDocument | null> {
+        try {
+            const event = await Event.findById(eventId);
+            return event;
+        } catch (error) {
+            throw error;
+        }
+    }
     public async createEvent(eventData: EventInput): Promise<EventDocument> {
         try {
             const event = await Event.create(eventData);
@@ -48,6 +58,25 @@ class EventService {
 
             const deletedEvent = await Event.findByIdAndDelete(eventId);
             return deletedEvent;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public async getAttendees(eventId: string): Promise<String[]> {
+        try {
+            const event = await Event.findById(eventId);
+            if (!event) {
+                return [];
+            }
+
+            const attendeesIds = event.participants;
+
+            const attendees = await User.find({ _id: { $in: attendeesIds } });
+
+            return attendees.map((attendee) => attendee.email);
+        
+
         } catch (error) {
             throw error;
         }

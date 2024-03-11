@@ -4,6 +4,19 @@ import { UserDocument, UserInput } from '../models/user.models';
 import bcrypt from 'bcrypt';
 class UserController{
 
+    public async getEventsByUser(req: Request, res:Response){
+        try {
+            const userExists: UserDocument | null = await userServices.findByEmail(req.params.email);
+            if(userExists){
+                return res.status(200).json(userExists.events);
+            }else{
+                return res.status(400).json({message: "User not found"});
+            }
+        }catch(error){
+            return res.status(500).json(error);
+        }
+    }
+
     public async create(req: Request, res:Response){
         try {
             const userExists: UserDocument | null = await userServices.findByEmail(req.body.email);

@@ -6,6 +6,7 @@ export interface EventInput {
     date: Date;
     location: string;
     type: string;
+    participants: mongoose.Types.ObjectId[];
 }
 
 export interface EventDocument extends EventInput, Document {
@@ -16,7 +17,8 @@ const eventSchema = new mongoose.Schema({
     description: { type: String, required: true },
     date: { type: Date, required: true },
     location: { type: String, required: true },
-    type: { type: String, required: true }
+    type: { type: String, required: true },
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const Event = mongoose.model<EventDocument>('Event', eventSchema);
