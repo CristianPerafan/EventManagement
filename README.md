@@ -102,8 +102,11 @@ El cuerpo de la solicitud debe contener la siguiente información:
     "type": "Tecnología"
 }
 ```
+7. **Listar eventos disponibles**: Permite listar los eventos disponibles por fecha, ubicación o tipo de evento, enviando una solicitud GET a las rutas '/events/filter/date', '/events/filter/location', '/events/filter/type'.
 
-7. **Actualización de eventos por ID**: Permite actualizar la información de un evento específico enviando una solicitud PUT a la ruta '/event/update/:id', donde ':id' es el identificador único del evento. 
+Pasando como parámetro la llave y el valor a filtrar.
+
+8. **Actualización de eventos por ID**: Permite actualizar la información de un evento específico enviando una solicitud PUT a la ruta '/event/update/:id', donde ':id' es el identificador único del evento. 
 
 El cuerpo de la solicitud debe contener la información a actualizar:
 
@@ -114,11 +117,11 @@ El cuerpo de la solicitud debe contener la información a actualizar:
 }
 ```
 
-8. **Eliminación de eventos por ID**: Permite eliminar un evento específico enviando una solicitud HTTP DELETE a la ruta '/event/delete/:id', donde ':id' es el identificador único del evento a eliminar.
+9. **Eliminación de eventos por ID**: Permite eliminar un evento específico enviando una solicitud HTTP DELETE a la ruta '/event/delete/:id', donde ':id' es el identificador único del evento a eliminar.
 
-9. **Suscripción a eventos**: Permite que un usuario se suscriba a un evento específico enviando una solicitud HTTP POST a la ruta '/event/:event_id/subscribe', donde ':event_id' es el identificador único del evento al que se desea suscribir. 
+10. **Suscripción a eventos**: Permite que un usuario se suscriba a un evento específico enviando una solicitud HTTP POST a la ruta '/event/:event_id/subscribe', donde ':event_id' es el identificador único del evento al que se desea suscribir. 
 
-10. **Obtención de asistentes a un evento**: Permite obtener la lista de asistentes a un evento específico enviando una solicitud HTTP GET a la ruta '/event/:event_id/attendees', donde ':event_id' es el identificador único del evento del que se desea obtener la lista de asistentes. 
+11. **Obtención de asistentes a un evento**: Permite obtener la lista de asistentes a un evento específico enviando una solicitud HTTP GET a la ruta '/event/:event_id/attendees', donde ':event_id' es el identificador único del evento del que se desea obtener la lista de asistentes. 
 
 
 # Deploy
